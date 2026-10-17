@@ -1,0 +1,37 @@
+{
+  "payload": {
+    "schema_version": "1",
+    "job_id": "demo-fixture-20261017-001",
+    "mode": "demo",
+    "raw_text": "  演示文本：这是一条待核对的信息。\r\nCrossCheck demo — not a real model call.  ",
+    "submitted_at": "2026-10-17T10:00:00+08:00",
+    "completed_at": "2026-10-17T10:00:01+08:00",
+    "rule_version": "demo-fixture-rule-v1",
+    "prompt_hash": "0x01196706e1aa8898f9ad9870529825053349e445ebf6e0b5d27fd99be6e064f5",
+    "model_config_hash": "0x37450f5425ffd2f5fc12ce31e6dad03f6506097ca001be67ea5f3e134bca8016",
+    "models": [
+      {
+        "slot": "a",
+        "provider": "demo-provider-a",
+        "requested_model": "fixture-a-v1",
+        "returned_model": "fixture-a-v1",
+        "status": "succeeded",
+        "verdict": "questionable",
+        "reason": "演示结果 A：缺少可核验来源，需进一步核对。",
+        "error_code": null
+      },
+      {
+        "slot": "b",
+        "provider": "demo-provider-b",
+        "requested_model": "fixture-b-v1",
+        "returned_model": "fixture-b-v1",
+        "status": "succeeded",
+        "verdict": "questionable",
+        "reason": "演示结果 B：此文本没有提供支持其结论的证据。",
+        "error_code": null
+      }
+    ],
+    "agreement": 0
+  },
+  "proof": null
+}

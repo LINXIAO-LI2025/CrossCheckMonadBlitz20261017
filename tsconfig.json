@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "target": "ES2022", "module": "NodeNext", "moduleResolution": "NodeNext",
+    "strict": true, "esModuleInterop": true, "skipLibCheck": true,
+    "resolveJsonModule": true, "noEmit": true, "types": ["node"],
+    "lib": ["ES2023", "DOM"], "forceConsistentCasingInFileNames": true
+  },
+  "include": ["apps/server/src/**/*.ts", "packages/*/src/**/*.ts", "packages/*/test/**/*.ts", "packages/*/scripts/**/*.ts", "scripts/**/*.ts"]
+}
