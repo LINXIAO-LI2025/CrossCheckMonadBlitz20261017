@@ -1,0 +1,27 @@
+{
+  "description": "Synthetic demo fixtures only. No provider requests or blockchain transactions occurred.",
+  "algorithm": "Ethereum Keccak-256; RFC 8785 JSON canonicalization semantics",
+  "rule_text": "CrossCheck demo fixture rule v1: evaluate the supplied text independently; return a verdict and reason. This fixture is synthetic.",
+  "model_config": {
+    "a": {
+      "provider": "demo-provider-a",
+      "requested_model": "fixture-a-v1"
+    },
+    "b": {
+      "provider": "demo-provider-b",
+      "requested_model": "fixture-b-v1"
+    }
+  },
+  "normal": {
+    "content_hash": "0x058b949e4ce9624e2353671b45a497929a85d2ef50e587afcef783913d96371f",
+    "verdict_hash": "0xa7ce503511f36d2d5b9e07d43a3471c2c5a51809190b49eb936daa41633c30bf"
+  },
+  "tampered": {
+    "content_hash": "0xd2ba73b9c47152a6605a39c69dc762c69902c3e2e8c2d2e3733e8fc356800895",
+    "verdict_hash": "0x815197cd6989cb1818966061be6db323d06f8226bb95175cf683576debbb97e5"
+  },
+  "reason_tampered": {
+    "content_hash": "0x058b949e4ce9624e2353671b45a497929a85d2ef50e587afcef783913d96371f",
+    "verdict_hash": "0xeba92e144989485f56ed548d27975f8b8c1e34d3241d5bb6bcd5515cd6a5905c"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "crosscheck-monad-blitz", "version": "0.1.0", "private": true,
+  "type": "module", "engines": { "node": ">=22" },
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "dev": "npm run dev -w @crosscheck/server",
+    "dev:server": "npm run dev -w @crosscheck/server",
+    "dev:web": "npm run dev -w @crosscheck/web --if-present",
+    "start": "npm run start -w @crosscheck/server",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test packages/protocol/test/*.test.ts apps/server/src/*.test.ts",
+    "check": "npm run typecheck && npm test",
+    "smoke": "tsx scripts/smoke.ts"
+  },
+  "devDependencies": { "typescript": "^5.9.3", "tsx": "^4.20.6", "@types/node": "^22.18.0", "@types/express": "^5.0.3" }
+}
