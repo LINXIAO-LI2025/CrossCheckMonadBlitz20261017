@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrossCheck - 内容审核提交</title>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .logo {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .tagline {
+            font-size: 16px;
+            opacity: 0.95;
+            font-weight: 500;
+        }
+
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 18px;
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            color: #1f2937;
+            font-size: 16px;
+            resize: vertical;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea::placeholder {
+            color: #9ca3af;
+        }
+
+        button {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .status-card {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border: 2px solid #667eea30;
+            border-radius: 20px;
+            padding: 24px;
+            margin-top: 20px;
+        }
+
+        .status-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .status-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .status-text {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 16px;
+        }
+
+        .loading-spinner {
+            width: 24px;
+            height: 24px;
+            border: 3px solid #e5e7eb;
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .results {
+            margin-top: 24px;
+        }
+
+        .model-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 16px;
+            border: 2px solid #e5e7eb;
+            transition: all 0.3s;
+        }
+
+        .model-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.1);
+        }
+
+        .model-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .model-name {
+            font-weight: 700;
+            color: #667eea;
+            font-size: 18px;
+        }
+
+        .verdict-badge {
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .verdict-credible {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .verdict-questionable {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .verdict-not_credible {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .verdict-unable {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .reason {
+            color: #6b7280;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        .agreement-banner {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 20px 24px;
+            border-radius: 16px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 16px;
+            margin-top: 24px;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+        }
+
+        .agreement-banner.disagree {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3);
+        }
+
+        .agreement-banner.uncertain {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3);
+        }
+
+        .cert-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 14px;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+            transition: all 0.3s;
+        }
+
+        .cert-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.4);
+        }
+
+        .quick-examples {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .example-chip {
+            padding: 8px 16px;
+            background: #f3f4f6;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #4b5563;
+            transition: all 0.3s;
+        }
+
+        .example-chip:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+            transform: translateY(-1px);
+        }
+
+        .error-card {
+            background: #fee2e2;
+            border: 2px solid #fca5a5;
+            border-radius: 16px;
+            padding: 20px;
+            color: #991b1b;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 640px) {
+            .card {
+                padding: 24px;
+                border-radius: 20px;
+            }
+
+            .logo {
+                font-size: 36px;
+            }
+        }
+    </style>
+<link rel="stylesheet" href="/front-overrides.css"></head>
+<body class="submit-page">
+  <main class="container">
+    <nav class="page-nav"><a href="/">CrossCheck 首页</a><a href="/screen.html" target="_blank" rel="noopener">实时大屏 ↗</a><a href="/cert.html">导入核验</a></nav>
+    <div class="header"><div class="logo">CrossCheck</div><div class="tagline">双模型审阅 · 报告指纹存证 · 浏览器复算</div></div>
+    <div class="mode-notice" id="environment">正在连接服务…</div>
+    <form class="card" id="submitForm">
+      <div class="form-group"><label for="serverMode">运行模式</label><div class="server-mode" id="serverMode">正在读取服务器模式…</div><p class="small-note" id="modeExplanation">运行模式由 A 服务器配置，页面只提交原始内容。</p></div>
+      <div class="form-group" id="scenarioGroup"><label for="scenarioInput">演示结果样例</label><select id="scenarioInput"><option value="agreement">意见一致 [demo:agree]</option><option value="disagreement">意见分歧 [demo:disagree]</option><option value="unable">无法判断 [demo:unable]</option></select><div class="quick-examples"><button type="button" class="example-chip" data-scenario="agreement">一致样例</button><button type="button" class="example-chip" data-scenario="disagreement">分歧样例</button><button type="button" class="example-chip" data-scenario="unable">无法判断样例</button></div></div>
+      <div class="form-group"><label for="contentInput">输入待审阅内容</label><textarea id="contentInput" maxlength="12000" placeholder="请输入要审阅的文字" required></textarea></div>
+      <button id="submitBtn" type="submit">提交审阅并生成报告</button>
+      <p class="small-note">模型意见可能出错。一致性、模型判断和存证状态分别展示；链上记录不等于事实核验或厂商双签。</p>
+    </form>
+    <section class="card report-share" id="submitShare"></section>
+    <div id="statusArea" aria-live="polite"></div><div id="resultsArea"></div>
+  </main>
+  <script src="/vendor/protocol.js"></script><script src="/browser-shared.js"></script><script src="/submit-page.js"></script>
+</body>
+</html>

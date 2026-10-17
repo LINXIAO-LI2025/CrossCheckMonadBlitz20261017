@@ -1,0 +1,5 @@
+{
+  "name": "@crosscheck/web", "version": "0.1.0", "private": true,
+  "type": "module", "dependencies": { "@crosscheck/protocol": "0.1.0", "@crosscheck/chain": "0.1.0" },
+  "description": "B browser interface consuming A's shared protocol and browser-safe chain reader"
+}
