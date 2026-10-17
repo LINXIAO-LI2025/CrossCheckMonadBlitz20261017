@@ -10,6 +10,9 @@ test('default configuration is demo with no fabricated deployment or model IDs',
   assert.equal(config.mode, 'demo'); assert.equal(config.chain_enabled, false);
   assert.equal(config.public.chain_id, 10143); assert.equal(config.public.contract_address, null);
   assert.equal(config.models.openai?.model, undefined); assert.equal(config.models.anthropic?.model, undefined);
+  assert.equal(config.port, 3001); assert.equal(config.host, '127.0.0.1');
+  assert.equal(config.public.public_origin, 'http://localhost:3001');
+  assert.equal((await loadConfig({ PORT: '3010', DEPLOYMENT_FILE: 'does-not-exist.json' })).public.public_origin, 'http://localhost:3010');
 });
 test('invalid limits and modes fail before serving traffic', async () => {
   for (const env of [{ MODE: 'unknown' }, { PORT: '0' }, { MAX_CONCURRENT_JOBS: '0' },

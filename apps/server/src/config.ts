@@ -22,6 +22,7 @@ export async function loadConfig(env: NodeJS.ProcessEnv = process.env): Promise<
   if (env === process.env) dotenv.config({ path: resolve(ROOT, '.env'), quiet: true });
   const mode = env.MODE ?? 'demo';
   if (mode !== 'demo' && mode !== 'live') throw new Error('MODE must be demo or live');
+  const port = int(env, 'PORT', 3001, 1, 65535);
   if (env.CHAIN_ENABLED && !['true', 'false'].includes(env.CHAIN_ENABLED)) throw new Error('Invalid CHAIN_ENABLED');
   const chain_enabled = env.CHAIN_ENABLED === 'true';
   let deployment: Record<string, unknown> | null = null;
@@ -38,14 +39,14 @@ export async function loadConfig(env: NodeJS.ProcessEnv = process.env): Promise<
     /^0x0{40}$/i.test(String(deployment.contract ?? deployment.contractAddress)) ||
     /^0x0{40}$/i.test(String(deployment.issuer)))) throw new Error('Invalid Monad testnet deployment');
   const publicConfig: PublicConfig = {
-    mode, public_origin: env.PUBLIC_ORIGIN ?? 'http://localhost:5173', chain_id: 10143,
+    mode, public_origin: env.PUBLIC_ORIGIN ?? `http://localhost:${port}`, chain_id: 10143,
     contract_address: deployment ? String(deployment.contract ?? deployment.contractAddress) : null,
     deployment_block: deployment ? BigInt(String(deployment.deploymentBlock)).toString() : null,
     issuer: deployment ? String(deployment.issuer) : null,
     explorer_tx_base_url: 'https://testnet.monadscan.com/tx/',
   };
   return {
-    mode, host: env.HOST ?? '127.0.0.1', port: int(env, 'PORT', 3001, 1, 65535),
+    mode, host: env.HOST ?? '127.0.0.1', port,
     data_dir: resolve(ROOT, env.DATA_DIR ?? 'data'), max_input_chars: int(env, 'MAX_INPUT_CHARS', 12000, 1, 1_000_000),
     rate_limit: int(env, 'RATE_LIMIT_PER_MINUTE', 20), max_concurrent: int(env, 'MAX_CONCURRENT_JOBS', 2, 1, 100),
     max_queue: int(env, 'MAX_QUEUE_SIZE', 20, 0, 10000), cache_ttl_ms: int(env, 'CACHE_TTL_MS', 3600000, 0),

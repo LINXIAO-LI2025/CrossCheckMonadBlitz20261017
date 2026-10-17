@@ -4,5 +4,6 @@
   "dependencies": {
     "@crosscheck/protocol": "0.1.0", "@crosscheck/chain": "0.1.0",
     "express": "^5.1.0", "dotenv": "^17.2.3", "openai": "^6.0.0", "@anthropic-ai/sdk": "^0.68.0"
-  }
+  },
+  "devDependencies": { "@types/express": "^5.0.3" }
 }

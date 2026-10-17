@@ -36,6 +36,7 @@ export class JobService {
   private recoveryTask?: Promise<void>;
   private closing = false;
   private storeClosed = false;
+  private chainClosed = false;
   private storageFailed = false;
   constructor(readonly config: ServerConfig, readonly store: JobStore, readonly chain: ChainGateway,
     adapters?: [ModelAdapter, ModelAdapter]) {
@@ -221,7 +222,7 @@ export class JobService {
       void rawAnchor.then(clearWriter, clearWriter);
       const proof = await deadline(rawAnchor, this.config.chain_timeout_ms);
       if (!job.anchor.tx_hash || proof.tx_hash.toLowerCase() !== job.anchor.tx_hash.toLowerCase()) throw new AppError('RECORD_MISMATCH');
-      const record = await deadline(this.chain.read(proof.certificate_id), this.config.chain_timeout_ms);
+      const record = await deadline(this.chain.read(proof.certificate_id, proof.tx_hash), this.config.chain_timeout_ms);
       this.checkRecord(job, record, proof.certificate_id);
       if (canonicalizeJson(record.proof) !== canonicalizeJson(proof)) throw new AppError('RECORD_MISMATCH');
       await this.confirm(job, record.proof);
@@ -266,18 +267,31 @@ export class JobService {
     this.recovering = true;
     try {
       for (const job of this.jobs.values()) {
-        if (!job.payload || !job.anchor.tx_hash || job.status !== 'anchor_failed' || job.mode !== 'live') continue;
+        if (!job.payload || !job.anchor.tx_hash || job.status !== 'anchor_failed' || job.mode !== 'live' || job.error?.code === 'TRANSACTION_REVERTED') continue;
         try {
           const record = await deadline(this.chain.recover(job.anchor.tx_hash, this.input(job)), this.config.chain_timeout_ms);
           if (record) { this.checkRecord(job, record); await this.confirm(job, record.proof); }
-        } catch { /* Keep the original durable status; a failed query never authorizes a new send. */ }
+        } catch (error) {
+          if (safeChainCode(error) === 'TRANSACTION_REVERTED') {
+            // A verified reverted receipt is a final outcome, unlike a failed/unknown query.
+            job.error = { code: 'TRANSACTION_REVERTED', message: '已确认原交易回滚；报告与交易记录保留，可重新提交生成新任务。' };
+            await this.status(job, 'anchor_failed');
+            await this.emit(job, 'anchor_error', { error: job.error, tx_hash: job.anchor.tx_hash });
+            await this.finish(job);
+          }
+          // Every other query error retains the unknown outcome and does not authorize a new send.
+        }
       }
     } finally { this.recovering = false; }
   }
   async certificate(id: string) {
     if (!this.config.public.contract_address) throw new AppError('CHAIN_NOT_CONFIGURED', 503);
     let record: CertificateRecord;
-    try { record = await deadline(this.chain.read(id), this.config.chain_timeout_ms); }
+    const known = [...this.jobs.values()].find((job) => job.mode === 'live' && job.proof?.certificate_id === id &&
+      job.proof.chain_id === this.config.public.chain_id &&
+      job.proof.contract_address.toLowerCase() === this.config.public.contract_address!.toLowerCase());
+    // The saved hash is only a lookup hint. A fresh receipt/event query and full comparison are mandatory.
+    try { record = await deadline(this.chain.read(id, known?.proof?.tx_hash), this.config.chain_timeout_ms); }
     catch (error) {
       const code = safeChainCode(error);
       throw new AppError(code, code === 'CERTIFICATE_NOT_FOUND' ? 404 : 503);
@@ -293,7 +307,7 @@ export class JobService {
       storage_ready: !this.storageFailed, active_jobs: this.tasks.size, queued_jobs: this.queue.length,
       models_ready: this.config.mode === 'demo' || !!(this.config.models.openai?.api_key && this.config.models.openai?.model &&
         this.config.models.anthropic?.api_key && this.config.models.anthropic?.model),
-      chain_ready: this.chain.configured, chain_recovery_ready: !!this.chain.recover,
+      chain_ready: this.chain.configured, chain_recovery_ready: this.chain.configured && !!this.chain.recover,
       demo: this.config.mode === 'demo' };
   }
   async idle() {
@@ -314,6 +328,9 @@ export class JobService {
     await Promise.all([...this.tasks]);
     await this.recoveryTask;
     this.storeClosed = true;
-    await this.store.close();
+    try { await this.store.close(); }
+    finally {
+      if (!this.chainClosed) { this.chainClosed = true; await this.chain.close?.(); }
+    }
   }
 }

@@ -56,7 +56,7 @@ Invoke-WebRequest "$api/api/jobs/$($job.job_id)/report" -OutFile 'local-report.j
 | --- | --- |
 | MODE | demo，只有显式 live 才请求模型 |
 | HOST / PORT | 127.0.0.1 / 3001；A 供 B 访问时 HOST=0.0.0.0 |
-| PUBLIC_ORIGIN | http://localhost:5173，前端公开地址 |
+| PUBLIC_ORIGIN | http://localhost:3001，随PORT变化；可显式配置前端公开地址 |
 | DATA_DIR | 根目录 data；单进程独占 |
 | MAX_INPUT_CHARS | 12000，JS UTF-16 code units；原文不 trim 保存 |
 | RATE_LIMIT_PER_MINUTE | 每实际连接 IP 20 次，不信客户端 X-Forwarded-For |
@@ -92,4 +92,4 @@ writer 的超时包装不能取消任意底层 RPC。A 单独追踪尚未结束�
 
 公共 health 的 models_ready 仅代表配置齐备，不代表网络调用或额度已验证；chain_ready 仅代表 B writer 和配置就绪，不能代替真实交易测试。OpenAI/Anthropic live 与 B 真链验证需后续本地配置后执行。
 
-项目不包含正式页面；B 尚未提供模块时无法完成三页面/真实文件上链复核。A 已提供接口和本地哈希篡改验收路径。
+A/B已集成四页和链模块；当前入口与验收结果见根目录INTEGRATION.md。默认demo不广播；真实模型和真实网络存证需要有效配置。

@@ -52,4 +52,8 @@ SSE 晚订阅的历史可能包含 earlier done 与后来恢复事件，客户�
 
 ## 链接口
 
-见 [chain-integration.md](chain-integration.md)。基础 `anchor(input,onBroadcast)` 与两个读取入口保持任务说明一致。为未返回 certificate_id 的广播恢复增加可选 `recover(tx_hash,input)`；只能读回执，不能重新发交易。A 初始占位仅抛 NOT_CONFIGURED，B 接手后 A 不改写其实现。
+见 [chain-integration.md](chain-integration.md)。基础 `anchor(input,onBroadcast)` 与两个读取入口保持任务说明一致。为未返回 certificate_id 的广播恢复增加可选 `recover(tx_hash,input)`；只能读回执，不能重新发交易。链模块已接入。A Gateway内部另支持read(id,tx_hash?)定位已保存的交易和close()释放provider；每次仍重新读链验证。
+
+## 集成兼容扩展
+
+GET /api/jobs/latest 返回最新JobView或null；GET /api/qr?text=本项目页面URL返回PNG。HTTP配置追加backend_mode、live_available、chain_ready，不改变共享publicConfigSchema七个核心字段；前端先摘核心字段严格校验。默认同源页面与API均在3001。

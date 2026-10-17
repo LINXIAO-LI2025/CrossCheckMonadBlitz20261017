@@ -1,16 +1,53 @@
 {
-  "name": "crosscheck-monad-blitz", "version": "0.1.0", "private": true,
-  "type": "module", "engines": { "node": ">=22" },
-  "workspaces": ["apps/*", "packages/*"],
-  "scripts": {
-    "dev": "npm run dev -w @crosscheck/server",
-    "dev:server": "npm run dev -w @crosscheck/server",
-    "dev:web": "npm run dev -w @crosscheck/web --if-present",
-    "start": "npm run start -w @crosscheck/server",
-    "typecheck": "tsc --noEmit",
-    "test": "tsx --test packages/protocol/test/*.test.ts apps/server/src/*.test.ts",
-    "check": "npm run typecheck && npm test",
-    "smoke": "tsx scripts/smoke.ts"
+  "name": "crosscheck-monad-blitz",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "A shared protocol and backend integrated with B browser, contract and chain implementation",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
   },
-  "devDependencies": { "typescript": "^5.9.3", "tsx": "^4.20.6", "@types/node": "^22.18.0", "@types/express": "^5.0.3" }
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "start": "node scripts/build-web.mjs && tsx apps/server/src/index.ts",
+    "dev": "node scripts/build-web.mjs && tsx watch apps/server/src/index.ts",
+    "dev:server": "node scripts/build-web.mjs && tsx watch apps/server/src/index.ts",
+    "dev:web": "node scripts/dev-web.mjs",
+    "build:web": "node scripts/build-web.mjs",
+    "build:protocol": "tsc -p packages/protocol/tsconfig.json",
+    "typecheck": "tsc --noEmit",
+    "test": "node scripts/test.mjs",
+    "check": "node scripts/check.mjs",
+    "smoke": "tsx scripts/smoke.ts",
+    "fixtures:check": "tsx packages/protocol/scripts/check-fixtures.ts",
+    "start:legacy": "tsx scripts/start-legacy.ts",
+    "dev:legacy": "tsx watch scripts/start-legacy.ts",
+    "demo:legacy": "node scripts/local-demo.mjs",
+    "compile": "node scripts/compile.mjs",
+    "deploy": "node scripts/deploy.mjs",
+    "preflight": "node scripts/preflight.mjs"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "ethers": "^6.17.0",
+    "express": "^4.22.3",
+    "ganache": "^7.9.2",
+    "qrcode": "^1.5.4",
+    "solc": "0.8.24"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^4.17.20",
+    "@types/node": "^22.18.0",
+    "@types/qrcode": "^1.5.6",
+    "http-server": "^14.1.1",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3",
+    "esbuild": "^0.25.12"
+  }
 }

@@ -1,0 +1,146 @@
+[
+  {
+    "name": "意见一致",
+    "report": {
+      "payload": {
+        "schema_version": "1",
+        "job_id": "88b9005d-035a-41ef-8e77-0f5afea12d48",
+        "mode": "demo",
+        "raw_text": "演示声明：这是一份明确标注为预设演示的报告，不代表真实模型调用。",
+        "submitted_at": "2026-10-17T04:37:06.141Z",
+        "completed_at": "2026-10-17T04:37:06.861Z",
+        "rule_version": "crosscheck-review-v1",
+        "prompt_hash": "0x532609d17532d57a8629a15aadb356ae7df05e06ef8dc04e556274baf5eb8a8f",
+        "model_config_hash": "0xc4daa11762b357dbda8117b03c179a3a44e2aa20c2498f231da7f8e7bc4f7933",
+        "models": [
+          {
+            "slot": "a",
+            "provider": "CrossCheck 固定演示样例",
+            "requested_model": "fixed-demo-v1",
+            "returned_model": "fixed-demo-v1",
+            "status": "succeeded",
+            "error_code": null,
+            "verdict": "credible",
+            "reason": "这是预设的一致演示结果A，没有调用AI，也没有核查所提交内容。"
+          },
+          {
+            "slot": "b",
+            "provider": "CrossCheck 固定演示样例",
+            "requested_model": "fixed-demo-v1",
+            "returned_model": "fixed-demo-v1",
+            "status": "succeeded",
+            "error_code": null,
+            "verdict": "credible",
+            "reason": "这是预设的一致演示结果B，没有调用AI，也没有核查所提交内容。"
+          }
+        ],
+        "agreement": 0
+      },
+      "proof": {
+        "chain_id": 10143,
+        "contract_address": "0x1aD4FFdE3c04b4C8daF208406957Db2dbFF45c8B",
+        "certificate_id": "2",
+        "issuer": "0xF6282e665b0a74b4cC1D9720a08c5CCcF2A22442",
+        "tx_hash": "0xefec5d8e53949c449d0a9bb4a9ef3a58b0dc76c65f6e534a3d58de9f2be4f7a3",
+        "block_number": "71727651",
+        "block_time": "1792211833"
+      }
+    }
+  },
+  {
+    "name": "意见分歧",
+    "report": {
+      "payload": {
+        "schema_version": "1",
+        "job_id": "ed431271-f3be-4cbb-ade3-7db84dc58505",
+        "mode": "demo",
+        "raw_text": "演示声明：我们的 AI 产品准确率达到 99.9%，已服务全球 10 亿用户。",
+        "submitted_at": "2026-10-17T04:37:13.321Z",
+        "completed_at": "2026-10-17T04:37:14.034Z",
+        "rule_version": "crosscheck-review-v1",
+        "prompt_hash": "0x532609d17532d57a8629a15aadb356ae7df05e06ef8dc04e556274baf5eb8a8f",
+        "model_config_hash": "0xc9f77893ade5358f580e6b2d9148acae96e97b5e65dc57998fe12962d7086d6f",
+        "models": [
+          {
+            "slot": "a",
+            "provider": "CrossCheck 固定演示样例",
+            "requested_model": "fixed-demo-v1",
+            "returned_model": "fixed-demo-v1",
+            "status": "succeeded",
+            "error_code": null,
+            "verdict": "credible",
+            "reason": "这是预设的分歧演示结果A，没有调用AI，也没有核查所提交内容。"
+          },
+          {
+            "slot": "b",
+            "provider": "CrossCheck 固定演示样例",
+            "requested_model": "fixed-demo-v1",
+            "returned_model": "fixed-demo-v1",
+            "status": "succeeded",
+            "error_code": null,
+            "verdict": "questionable",
+            "reason": "这是预设的分歧演示结果B，没有调用AI，也没有核查所提交内容。"
+          }
+        ],
+        "agreement": 1
+      },
+      "proof": {
+        "chain_id": 10143,
+        "contract_address": "0x1aD4FFdE3c04b4C8daF208406957Db2dbFF45c8B",
+        "certificate_id": "3",
+        "issuer": "0xF6282e665b0a74b4cC1D9720a08c5CCcF2A22442",
+        "tx_hash": "0x84e60521833c92b5ae5b634c1cf5ba2965299d28c82492013fef2a56a33f8ab1",
+        "block_number": "71727673",
+        "block_time": "1792211839"
+      }
+    }
+  },
+  {
+    "name": "无法判断",
+    "report": {
+      "payload": {
+        "schema_version": "1",
+        "job_id": "b1079597-3b52-4dd0-a01b-89c5f7fab1c6",
+        "mode": "demo",
+        "raw_text": "演示声明：某未公开项目明年将实现显著增长，目前没有可核对的资料。",
+        "submitted_at": "2026-10-17T04:37:19.481Z",
+        "completed_at": "2026-10-17T04:37:20.192Z",
+        "rule_version": "crosscheck-review-v1",
+        "prompt_hash": "0x532609d17532d57a8629a15aadb356ae7df05e06ef8dc04e556274baf5eb8a8f",
+        "model_config_hash": "0xc36d42a8d666d154747ad4874d13dc43ee5c5877bd1fa338ef91ff6ac4589b47",
+        "models": [
+          {
+            "slot": "a",
+            "provider": "CrossCheck 固定演示样例",
+            "requested_model": "fixed-demo-v1",
+            "returned_model": "fixed-demo-v1",
+            "status": "succeeded",
+            "error_code": null,
+            "verdict": "unable_to_determine",
+            "reason": "这是预设的“无法判断”演示结果，没有调用AI，也没有核查所提交内容。"
+          },
+          {
+            "slot": "b",
+            "provider": "CrossCheck 固定演示样例",
+            "requested_model": "fixed-demo-v1",
+            "returned_model": "fixed-demo-v1",
+            "status": "succeeded",
+            "error_code": null,
+            "verdict": "unable_to_determine",
+            "reason": "这是预设的“无法判断”演示结果，没有调用AI，也没有核查所提交内容。"
+          }
+        ],
+        "agreement": 2
+      },
+      "proof": {
+        "chain_id": 10143,
+        "contract_address": "0x1aD4FFdE3c04b4C8daF208406957Db2dbFF45c8B",
+        "certificate_id": "4",
+        "issuer": "0xF6282e665b0a74b4cC1D9720a08c5CCcF2A22442",
+        "tx_hash": "0x264726d57f599ffe858f16dbbe77a0fe31d72efacf188fb8b89712538cfe2ca4",
+        "block_number": "71727690",
+        "block_time": "1792211844"
+      }
+    }
+  }
+]

@@ -1,0 +1,10 @@
+{
+  "chainId": 10143,
+  "contractAddress": "0x1aD4FFdE3c04b4C8daF208406957Db2dbFF45c8B",
+  "issuerAddress": "0xF6282e665b0a74b4cC1D9720a08c5CCcF2A22442",
+  "deploymentBlock": "71725794",
+  "rpcUrl": "https://testnet-rpc.monad.xyz",
+  "explorerUrl": "https://testnet.monadscan.com",
+  "sourceUrl": "https://github.com/yanyu473/CrossCheckMonadBlitz20261017",
+  "fullServerUrl": "https://github.com/yanyu473/CrossCheckMonadBlitz20261017#运行"
+}

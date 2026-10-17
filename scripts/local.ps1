@@ -11,16 +11,13 @@ if (-not (Test-Path -LiteralPath $tsxPath)) { throw 'Dependencies missing. Run n
 Push-Location $projectRoot
 try {
   if ($Action -eq 'Start') {
+    & $nodePath 'scripts/build-web.mjs'
+    if ($LASTEXITCODE -ne 0) { throw 'Browser build failed.' }
     & $nodePath $tsxPath 'apps/server/src/index.ts'
   } elseif ($Action -eq 'Smoke') {
     & $nodePath $tsxPath 'scripts/smoke.ts'
   } else {
-    & $nodePath 'node_modules/typescript/bin/tsc' --noEmit
-    if ($LASTEXITCODE -ne 0) { throw 'TypeScript check failed.' }
-    $testFiles = @((Get-ChildItem 'packages/protocol/test/*.test.ts').FullName) + @((Get-ChildItem 'apps/server/src/*.test.ts').FullName)
-    & $nodePath $tsxPath --test @testFiles
-    if ($LASTEXITCODE -ne 0) { throw 'Tests failed.' }
-    & $nodePath $tsxPath 'packages/protocol/scripts/check-fixtures.ts'
+    & $nodePath 'scripts/check.mjs'
   }
   if ($LASTEXITCODE -ne 0) { throw "Local $Action failed." }
 } finally { Pop-Location }

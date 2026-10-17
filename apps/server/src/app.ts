@@ -1,9 +1,14 @@
 import express, { type NextFunction, type Request, type Response } from 'express';
+import { resolve } from 'node:path';
+import QRCode from 'qrcode';
 import { AppError } from './chain.js';
+import { ROOT } from './config.js';
 import type { JobService } from './service.js';
 import type { StoredEvent } from './store.js';
 
-export function createApp(service: JobService) {
+export interface AppOptions { static_root?: string }
+
+export function createApp(service: JobService, options: AppOptions = {}) {
   const app = express();
   app.disable('x-powered-by');
   app.set('trust proxy', false);
@@ -13,6 +18,23 @@ export function createApp(service: JobService) {
     next();
   });
   app.use(express.json({ limit: Math.max(2048, service.config.max_input_chars * 12 + 512), strict: true }));
+  // Serve only reviewed browser assets. Do not expose the repository as a static directory.
+  const staticRoot = options.static_root ?? ROOT;
+  const publicFiles = new Map([
+    ['/', 'index.html'], ['/index.html', 'index.html'], ['/submit.html', 'submit.html'],
+    ['/screen.html', 'screen.html'], ['/cert.html', 'cert.html'],
+    ['/browser-shared.js', 'browser-shared.js'], ['/index-page.js', 'index-page.js'],
+    ['/submit-page.js', 'submit-page.js'], ['/screen-page.js', 'screen-page.js'],
+    ['/cert-page.js', 'cert-page.js'], ['/front-overrides.css', 'front-overrides.css'],
+    ['/vendor/protocol.js', 'vendor/protocol.js'],
+    ['/vendor/ethers.js', 'node_modules/ethers/dist/ethers.umd.min.js'],
+  ]);
+  for (const [route, filename] of publicFiles) app.get(route, (_req, res, next) => {
+    res.sendFile(resolve(staticRoot, filename), { dotfiles: 'deny' }, (error) => {
+      if (error) next((error as { status?: number }).status === 404 ? new AppError('NOT_FOUND', 404) : error);
+    });
+  });
+  app.get('/favicon.ico', (_req, res) => { res.status(204).end(); });
   const rates = new Map<string, { start: number; count: number }>();
   app.post('/api/verify', async (req, res) => {
     // Never trust arbitrary X-Forwarded-For sent by the client.
@@ -29,6 +51,10 @@ export function createApp(service: JobService) {
       throw new AppError('INVALID_REQUEST', 400);
     }
     res.status(202).json(await service.submit(req.body.content));
+  });
+  app.get('/api/jobs/latest', (_req, res) => {
+    const latest = [...service.jobs.values()].reverse().sort((a, b) => b.submitted_at.localeCompare(a.submitted_at))[0];
+    res.json(latest ? service.view(latest.job_id) : null);
   });
   app.get('/api/jobs/:job_id', (req, res) => res.json(service.view(req.params.job_id)));
   const streams = new Set<Response>();
@@ -82,7 +108,23 @@ export function createApp(service: JobService) {
     const { report } = await service.certificate(req.params.id);
     download(res, `crosscheck-${report.payload.job_id}.json`, report);
   });
-  app.get('/api/config', (_req, res) => res.json(service.config.public));
+  app.get('/api/config', (_req, res) => res.json({ ...service.config.public,
+    backend_mode: 'a-integrated', live_available: !!(service.config.models.openai?.api_key?.trim() &&
+      service.config.models.openai?.model?.trim() && service.config.models.anthropic?.api_key?.trim() &&
+      service.config.models.anthropic?.model?.trim()), chain_ready: service.chain.configured,
+  }));
+  app.get('/api/qr', async (req, res) => {
+    const text = req.query.text;
+    if (typeof text !== 'string' || text.length > 2000) throw new AppError('INVALID_QR_URL', 400);
+    try {
+      const target = new URL(text);
+      const allowed = new Set([`${req.protocol}://${req.get('host')}`]);
+      if (service.config.public.public_origin) allowed.add(new URL(service.config.public.public_origin).origin);
+      if (!['http:', 'https:'].includes(target.protocol) || target.username || target.password || !allowed.has(target.origin) ||
+        !['/', '/index.html', '/submit.html', '/screen.html', '/cert.html'].includes(target.pathname)) throw new Error('Invalid');
+    } catch { throw new AppError('INVALID_QR_URL', 400); }
+    res.type('image/png').send(await QRCode.toBuffer(text, { width: 320, margin: 2, errorCorrectionLevel: 'M' }));
+  });
   app.get('/api/health', (_req, res) => {
     const health = service.health(); res.status(health.status === 'ok' ? 200 : 503).json(health);
   });

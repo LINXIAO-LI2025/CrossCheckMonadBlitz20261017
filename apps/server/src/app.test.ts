@@ -13,7 +13,7 @@ import { hashPayload } from '@crosscheck/protocol';
 
 async function harness(env: NodeJS.ProcessEnv = {}) {
   const dir = await mkdtemp(join(tmpdir(), 'crosscheck-http-'));
-  const config = await loadConfig({ MODE: 'demo', DATA_DIR: dir, ...env });
+  const config = await loadConfig({ MODE: 'demo', DATA_DIR: dir, DEPLOYMENT_FILE: 'test-no-deployment.json', ...env });
   const service = new JobService(config, new JobStore(dir), createGateway(config));
   await service.init();
   const { app, closeStreams } = createApp(service);

@@ -502,3 +502,68 @@ test('invalid content is rejected before creating or charging a model job', asyn
   assert.equal(service.jobs.size, 0);
   assert.equal(calls, 0);
 });
+
+test('a restarted certificate request uses a durable transaction hint and still performs a fresh read every time', async (t) => {
+  const h = await harness(t, { MODE: 'live' });
+  let input: AnchorInput | undefined;
+  const first = await h.start({ configured: true,
+    async anchor(value, onBroadcast) { input = value; await onBroadcast(TX_HASH); return structuredClone(proof); },
+    async read(id, txHash) { assert.equal(id, proof.certificate_id); assert.equal(txHash, TX_HASH); return matchingRecord(input!); },
+  }, fakeAdapters());
+  const accepted = await first.submit('Persisted proof avoids an old deployment-wide scan');
+  await first.idle();
+  assert.equal(first.view(accepted.job_id).status, 'confirmed');
+  await first.close();
+  let reads = 0;
+  let unavailableNow = false;
+  const restarted = await h.start({ configured: false,
+    async anchor() { throw new Error('Read-only restart must not broadcast'); },
+    async read(id, txHash) {
+      reads++;
+      assert.equal(id, proof.certificate_id); assert.equal(txHash, TX_HASH);
+      if (unavailableNow) throw new AppError('CHAIN_UNAVAILABLE', 503);
+      return matchingRecord(input!);
+    },
+  }, fakeAdapters(() => { throw new Error('Saved reports do not rerun models'); }));
+  const cert = await restarted.certificate(proof.certificate_id);
+  assert.equal(cert.report.payload.job_id, accepted.job_id);
+  assert.equal(reads, 1);
+  await restarted.certificate(proof.certificate_id);
+  assert.equal(reads, 2);
+  unavailableNow = true;
+  await assert.rejects(restarted.certificate(proof.certificate_id), { code: 'CHAIN_UNAVAILABLE' });
+  assert.equal(reads, 3); // Stored proof is never accepted as an offline substitute.
+});
+
+test('service shutdown releases its chain gateway exactly once', async (t) => {
+  const h = await harness(t);
+  let closes = 0;
+  const service = await h.start({ ...unavailable, close() { closes++; } });
+  await service.close();
+  await service.close();
+  assert.equal(closes, 1);
+});
+
+test('a verified reverted recovery releases duplicate protection while unknown queries never do', async (t) => {
+  const h = await harness(t, { MODE: 'live' });
+  let reverted = false;
+  let writes = 0;
+  const service = await h.start({ configured: true,
+    async anchor(_input, onBroadcast) { writes++; await onBroadcast(TX_HASH); throw new AppError('CONFIRMATION_TIMEOUT', 503); },
+    async read() { throw new Error('No confirmed certificate'); },
+    async recover() { if (reverted) throw new AppError('TRANSACTION_REVERTED', 409); throw new AppError('CHAIN_UNAVAILABLE', 503); },
+  }, fakeAdapters());
+  const original = await service.submit('Explicitly reverted transaction may be submitted again');
+  await service.idle();
+  await service.recoverBroadcasts();
+  const unknown = await service.submit('Explicitly reverted transaction may be submitted again');
+  assert.equal(unknown.job_id, original.job_id); assert.equal(unknown.reused, true); assert.equal(writes, 1);
+  reverted = true;
+  await service.recoverBroadcasts();
+  assert.equal(service.view(original.job_id).error?.code, 'TRANSACTION_REVERTED');
+  assert.equal((await h.snapshot(original.job_id)).error?.code, 'TRANSACTION_REVERTED');
+  const retry = await service.submit('Explicitly reverted transaction may be submitted again');
+  assert.notEqual(retry.job_id, original.job_id); assert.equal(retry.reused, false);
+  await service.idle();
+  assert.equal(writes, 2);
+});

@@ -1,3 +1,5 @@
+> 历史记录：以下为 A 独立交付时的状态与环境路径。当前集成入口、实现和验证以 [INTEGRATION.md](../INTEGRATION.md) 为准。
+
 # WorkBuddy 本地交接
 
 ## 唯一工作目录
