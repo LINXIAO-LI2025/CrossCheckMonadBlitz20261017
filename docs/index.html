@@ -3,9 +3,22 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="CrossCheck：双模型预设样例回放与真实 Monad 测试网报告存证核验。浏览器独立复算、直读 RPC，可检测嵌套模型理由被修改。">
+  <meta name="description" content="CrossCheckMonadBlitz20261017（CrossCheck）公开演示：回放双模型预设样例，独立核验真实 Monad 测试网存证。支持报告导出、浏览器复算与篡改检测；样例未调用真实模型 API。">
   <meta name="theme-color" content="#0b1020">
-  <title>CrossCheck · 双模型报告与链上证据</title>
+  <title>CrossCheckMonadBlitz20261017 · CrossCheck 报告与 Monad 存证核验</title>
+  <link rel="canonical" href="https://yanyu473.github.io/CrossCheckMonadBlitz20261017/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:site_name" content="CrossCheckMonadBlitz20261017">
+  <meta property="og:title" content="CrossCheckMonadBlitz20261017 · CrossCheck">
+  <meta property="og:description" content="双模型预设样例回放与真实 Monad 测试网存证核验。导出完整报告、浏览器复算、直读 RPC 并检测篡改；样例未调用真实模型 API。">
+  <meta property="og:url" content="https://yanyu473.github.io/CrossCheckMonadBlitz20261017/">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="CrossCheckMonadBlitz20261017 · CrossCheck">
+  <meta name="twitter:description" content="双模型预设样例回放与真实 Monad 测试网存证核验。支持报告导出和篡改检测；样例未调用真实模型 API。">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://yanyu473.github.io/CrossCheckMonadBlitz20261017/#website","url":"https://yanyu473.github.io/CrossCheckMonadBlitz20261017/","name":"CrossCheckMonadBlitz20261017","alternateName":"CrossCheck","inLanguage":"zh-CN","description":"双模型预设样例回放与真实 Monad 测试网存证核验；样例未调用真实模型 API。"},{"@type":"WebPage","@id":"https://yanyu473.github.io/CrossCheckMonadBlitz20261017/#webpage","url":"https://yanyu473.github.io/CrossCheckMonadBlitz20261017/","name":"CrossCheckMonadBlitz20261017 · CrossCheck 报告与 Monad 存证核验","isPartOf":{"@id":"https://yanyu473.github.io/CrossCheckMonadBlitz20261017/#website"},"inLanguage":"zh-CN","description":"回放三份预设报告，在浏览器复算指纹并读取 Monad 测试网记录，核对完整报告与存证是否相符。","hasPart":{"@type":"WebPage","url":"https://yanyu473.github.io/CrossCheckMonadBlitz20261017/about.html","name":"CrossCheckMonadBlitz20261017 项目说明与源码"}}]}
+  </script>
   <link rel="stylesheet" href="./styles.css">
   <script defer src="./vendor/ethers.js"></script>
   <script defer src="./vendor/qrcode.js"></script>
@@ -19,7 +32,7 @@
     <header class="nav"><a class="wordmark" href="./"><span class="brand-mark" aria-hidden="true">✳</span> CrossCheck</a><nav><a href="#evidence">链上证据</a><a href="#verify">独立核验</a><a id="sourceLink" href="./about.html">源码与说明 ↗</a></nav></header>
     <main>
       <section class="hero">
-        <div><div class="eyebrow"><span></span> TWO PERSPECTIVES. ONE AUDIT TRAIL.</div><h1>判断可以不同。<br><span>记录，经得起复查。</span></h1><p class="hero-copy">保留两份模型意见、原文与分歧，用一个链上指纹固定报告。你可以直接读链，亲手验证它有没有被改过。</p><div class="hero-actions"><a class="button primary" href="#samples">查看样例 <span>↘</span></a><a class="text-link" href="#verify">试试修改一条模型理由 →</a></div></div>
+        <div><div class="eyebrow"><span></span> TWO PERSPECTIVES. ONE AUDIT TRAIL.</div><p class="project-id">CrossCheckMonadBlitz20261017</p><h1>判断可以不同。<br><span>记录，经得起复查。</span></h1><p class="hero-copy">保留两份模型意见、原文与分歧，用一个链上指纹固定报告。你可以直接读链，亲手验证它有没有被改过。</p><div class="hero-actions"><a class="button primary" href="#samples">查看样例 <span>↘</span></a><a class="text-link" href="#verify">试试修改一条模型理由 →</a></div></div>
         <aside class="hero-aside"><div class="orbit" aria-hidden="true"><div class="orbit-inner"><span>A</span><i>✳</i><span>B</span></div></div><p>相同意见 ≠ 事实成立<br>存证相符 ≠ 厂商签名</p><div class="chain-chip">MONAD TESTNET <b>10143</b></div></aside>
       </section>
       <div id="pageError" class="message error" role="alert" hidden></div>
@@ -47,7 +60,7 @@
       </section>
       <section class="share-section"><div><div class="eyebrow">SHOW THE RECEIPT</div><h2>把证据，交给下一个人。</h2><p>扫码打开这份公网回放页，选择样例后可在自己的浏览器复查。</p><a id="fullServerLink" class="text-link" href="./about.html">查看完整产品与本地运行说明 ↗</a></div><div class="share-box"><canvas id="shareQr" width="200" height="200" aria-label="当前公开页面二维码"></canvas><a id="shareLink" href="./">当前页面链接</a><p id="shareNote">二维码只包含当前页面 URL</p></div></section>
     </main>
-    <footer><a class="wordmark" href="./">✳ CrossCheck</a><p>预设样例回放，非真实模型 API；链上交易真实。<br>完整 Node 服务仍是主要产品，此页提供公开、可复查的演示。</p><span>MADE TO BE CHECKED.</span></footer>
+    <footer><a class="wordmark" href="./">✳ CrossCheck</a><p>预设样例回放，非真实模型 API；链上交易真实。<br>完整 Node 服务仍是主要产品，此页提供公开、可复查的演示。<br><a class="text-link" href="./about.html">CrossCheckMonadBlitz20261017 项目说明与源码 ↗</a></p><span>MADE TO BE CHECKED.</span></footer>
   </div>
 </body>
 </html>

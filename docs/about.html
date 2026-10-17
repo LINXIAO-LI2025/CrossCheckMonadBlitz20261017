@@ -1,1 +1,45 @@
-<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CrossCheck · 产品说明</title><link rel="stylesheet" href="styles.css"><body><main class="layout" style="max-width:860px;padding:40px 0"><a href="./">← 返回可核验演示</a><h1>CrossCheck</h1><p>双模型审阅报告、Monad 测试网存证和浏览器独立复核。</p><h2>这份公开演示是什么</h2><p>公开页面回放三份固定样例。样例报告已经真实写入 Monad 测试网，浏览器可以直接读取 RPC 并核对完整报告指纹。修改模型理由后，核验会失败。</p><p>样例没有调用真实模型 API，也不证明内容真假。页面显著显示这个边界，不伪造厂商签名或实时审核。</p><h2>完整产品包含什么</h2><p>四页前端、Express 后端、并行模型适配器、SSE 进度、持久报告、授权发证合约、完整 JSON 导出及浏览器复核。真实 API 模式需要在服务器配置两家 Key 和实际可调用的模型 ID；当前尚未配置和实测。</p><h2>为什么有完整报告指纹</h2><p>报告包含原文、请求与返回模型标识、两份判断、理由、时间及规则版本。对象键递归排序，数组保序，原文不去空白；模型理由也参与 Keccak-256。指定合约只接受授权发证钱包，浏览器核对交易回执、事件、发证地址和指纹。</p><h2>如何复查</h2><p>回到演示页，选择样例，点击核验原始报告。确认成功后，再点击修改模型理由并核验。也可以下载 JSON，在自己的浏览器导入。导入文件仅本地处理，不上传。</p><p>完整源码与运行说明会随参赛材料提供；公开回放页本身无需后端、钱包或登录。</p></main></body></html>
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>CrossCheckMonadBlitz20261017 · 项目说明与源码</title>
+  <meta name="description" content="CrossCheckMonadBlitz20261017（CrossCheck）项目说明、源码和运行边界：双模型预设样例回放、真实 Monad 测试网记录、浏览器报告核验。真实模型 API 模式尚待配置和实测。">
+  <meta name="theme-color" content="#0b1020">
+  <link rel="canonical" href="https://yanyu473.github.io/CrossCheckMonadBlitz20261017/about.html">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:site_name" content="CrossCheckMonadBlitz20261017">
+  <meta property="og:title" content="CrossCheckMonadBlitz20261017 · 项目说明与源码">
+  <meta property="og:description" content="了解 CrossCheck 双模型预设样例、真实 Monad 测试网存证、报告指纹与独立核验的适用边界，并获取公开源码。">
+  <meta property="og:url" content="https://yanyu473.github.io/CrossCheckMonadBlitz20261017/about.html">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="CrossCheckMonadBlitz20261017 · 项目说明与源码">
+  <meta name="twitter:description" content="双模型预设样例回放、真实 Monad 测试网报告存证及浏览器核验。公开源码与运行说明。">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"AboutPage","@id":"https://yanyu473.github.io/CrossCheckMonadBlitz20261017/about.html#webpage","url":"https://yanyu473.github.io/CrossCheckMonadBlitz20261017/about.html","name":"CrossCheckMonadBlitz20261017 项目说明与源码","inLanguage":"zh-CN","isPartOf":{"@type":"WebSite","@id":"https://yanyu473.github.io/CrossCheckMonadBlitz20261017/#website","name":"CrossCheckMonadBlitz20261017","url":"https://yanyu473.github.io/CrossCheckMonadBlitz20261017/"},"about":{"@type":"SoftwareSourceCode","name":"CrossCheckMonadBlitz20261017","alternateName":"CrossCheck","codeRepository":"https://github.com/LINXIAO-LI2025/CrossCheckMonadBlitz20261017","description":"双模型审阅报告、Monad 测试网存证及浏览器独立核验。公开站点回放预设样例，未调用真实模型 API。","programmingLanguage":["TypeScript","Solidity"]}}
+  </script>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="layout about-page">
+    <a class="text-link" href="./">← 返回可核验演示</a>
+    <p class="eyebrow">CROSSCHECK / PROJECT</p>
+    <h1>CrossCheckMonadBlitz20261017</h1>
+    <p class="hero-copy">CrossCheck：双模型审阅报告、Monad 测试网存证和浏览器独立复核。</p>
+    <h2>这份公开演示是什么</h2>
+    <p>公开页面回放三份固定样例。样例报告已经真实写入 Monad 测试网，浏览器可以直接读取 RPC 并核对完整报告指纹。修改模型理由后，核验会失败。</p>
+    <p>样例没有调用真实模型 API，也不证明内容真假。页面显著显示这个边界，不伪造厂商签名或实时审核。</p>
+    <h2>完整产品包含什么</h2>
+    <p>四页前端、Express 后端、并行模型适配器、SSE 进度、持久报告、授权发证合约、完整 JSON 导出及浏览器复核。真实 API 模式需要在服务器配置两家 Key 和实际可调用的模型 ID；当前尚未配置和实测。</p>
+    <h2>为什么有完整报告指纹</h2>
+    <p>报告包含原文、请求与返回模型标识、两份判断、理由、时间及规则版本。对象键递归排序，数组保序，原文不去空白；模型理由也参与 Keccak-256。指定合约只接受授权发证钱包，浏览器核对交易回执、事件、发证地址和指纹。</p>
+    <h2>如何复查</h2>
+    <p>回到演示页，选择样例，点击核验原始报告。确认成功后，再点击修改模型理由并核验。也可以下载 JSON，在自己的浏览器导入。导入文件仅本地处理，不上传。</p>
+    <h2>公开源码与本地运行</h2>
+    <p>项目仓库名称为 <strong>CrossCheckMonadBlitz20261017</strong>。公开回放页本身无需后端、钱包或登录；完整产品的安装、配置和运行步骤见仓库说明。</p>
+    <p><a class="button secondary" href="https://github.com/LINXIAO-LI2025/CrossCheckMonadBlitz20261017" target="_blank" rel="noopener noreferrer">查看 GitHub 源码与运行说明 ↗</a></p>
+    <p><a class="text-link" href="./">打开 CrossCheckMonadBlitz20261017 公开演示 →</a></p>
+  </main>
+</body>
+</html>
