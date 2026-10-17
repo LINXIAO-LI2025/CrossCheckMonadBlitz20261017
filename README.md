@@ -1,6 +1,12 @@
-# CrossCheck · 双模型报告与 Monad 存证
+# CrossCheckMonadBlitz20261017 · CrossCheck
 
 以 A 的共享协议和后端为主入口，接入 B 的四页面界面、Solidity 合约和链上核验。双方提交历史和原有实现均保留；B 原后端通过 start:legacy 单独运行。
+
+## 在线演示
+
+[打开 CrossCheckMonadBlitz20261017](https://yanyu473.github.io/CrossCheckMonadBlitz20261017/) · [项目说明](https://yanyu473.github.io/CrossCheckMonadBlitz20261017/about.html) · [站点地图](https://yanyu473.github.io/CrossCheckMonadBlitz20261017/sitemap.xml)
+
+公开站回放固定样例，支持报告导出与真实 Monad 测试网记录核验。任意文字的实时审阅需要运行下方完整 Node 服务并配置模型 API。
 
 ## 运行
 
