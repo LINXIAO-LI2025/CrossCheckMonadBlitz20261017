@@ -22,4 +22,6 @@ Node.js 22+，npm install，然后 npm start。新环境复制 .env.example 为 
 
 ## 公开演示
 
-计划发布地址：https://yanyu473.github.io/CrossCheckMonadBlitz20261017/。发布完成前以实际部署状态为准。
+已发布并经浏览器核验：https://yanyu473.github.io/CrossCheckMonadBlitz20261017/
+
+指定主仓库的实现PR：https://github.com/LINXIAO-LI2025/CrossCheckMonadBlitz20261017/pull/1 （待仓库所有者合并）。
