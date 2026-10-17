@@ -1,0 +1,46 @@
+{
+  "name": "crosscheck",
+  "version": "1.0.0",
+  "description": "CrossCheck - 双签审核存证系统",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsx server.ts",
+    "dev": "tsx watch server.ts",
+    "demo": "node scripts/local-demo.mjs",
+    "compile": "node scripts/compile.mjs",
+    "deploy": "node scripts/deploy.mjs",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "check": "tsc --noEmit",
+    "preflight": "node scripts/preflight.mjs"
+  },
+  "keywords": [
+    "blockchain",
+    "monad",
+    "ai",
+    "verification"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "ethers": "^6.17.0",
+    "express": "^4.22.3",
+    "ganache": "^7.9.2",
+    "qrcode": "^1.5.4",
+    "solc": "0.8.24"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^4.17.20",
+    "@types/node": "^20.8.0",
+    "@types/qrcode": "^1.5.6",
+    "http-server": "^14.1.1",
+    "tsx": "^4.23.15",
+    "typescript": "^5.2.2"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  }
+}
